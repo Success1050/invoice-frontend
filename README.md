@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InvoiceFlow - Web Frontend
 
-## Getting Started
+A modern, responsive Invoice and Customer Management application built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
-First, run the development server:
+## 🚀 Objective
+Develop a web application that allows users to view, search, and manage a list of invoices and customers through a robust integration with a NestJS backend API.
 
+## 🛠 Technology Stack
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) / Vanilla Global CSS
+- **API Integration:** RESTful Fetch API
+
+## ✨ Key Features
+- **Dashboard Overview:** Real-time business statistics and quick access to recent activities.
+- **Invoice Management:** Full CRUD (Create, Read, Update, Delete) with status tracking (Paid, Pending, Overdue).
+- **Customer Database:** Centralized management of customer profiles and contact information.
+- **Advanced Search & Filtering:** Instant filtering of lists by name, ID, status, or description.
+- **Responsive Detail Views:** Deep-dive into specific records with mobile-optimized layouts.
+- **Error Handling:** Graceful API failure handling with user-friendly error messages and loading skeletons.
+
+## 📥 Prerequisites
+Before you begin, ensure you have the following installed:
+- [Node.js 18.x](https://nodejs.org/) or higher
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+## ⚙️ Setup & Installation
+
+Follow these steps to get the project running locally:
+
+### 1. Clone the Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Success1050/invoice-frontend.git
+cd invoice-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Environment Configuration
+The application requires a connection to the [InvoiceFlow Backend](https://github.com/Success1050/invoice-backend).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+2. Open `.env` and ensure the `NEXT_PUBLIC_API_URL` matches your running backend URL (default is `http://localhost:3000`).
 
-## Learn More
+### 4. Run the Development Server
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+The application will be available at [http://localhost:3001](http://localhost:3001) (or your configured port).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔗 Repository Links
+- **Backend (NestJS):** [Repository Link](https://github.com/Success1050/invoice-backend)
+- **Frontend (Web):** [Repository Link](https://github.com/Success1050/invoice-frontend)
+- **Mobile (Flutter):** [Repository Link](https://github.com/Success1050/invoice-mobile)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Created by Emmanuel Success for the Applicant Exercise.*
