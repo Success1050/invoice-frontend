@@ -5,7 +5,7 @@ import { getInvoices, getCustomers, createInvoice, updateInvoice, deleteInvoice 
 import { useRouter } from "next/navigation";
 import Modal from "../components/Modal";
 import SearchBar from "../components/SearchBar";
-import AppShell from "../components/AppShell";
+
 
 const avatarColors = [
   "#4f8ef7", "#7c6bf0", "#22d3ee", "#10b981", "#f59e0b", "#f43f5e",
@@ -49,6 +49,15 @@ export default function InvoicesPage() {
     description: "",
   });
   const router = useRouter();
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const customerNameParam = searchParams?.get("customer");
+  const customerIdParam = searchParams?.get("customerId");
+
+  useEffect(() => {
+    if (customerNameParam) {
+      setSearch(customerNameParam);
+    }
+  }, [customerNameParam]);
 
   const fetchInvoices = async () => {
     setLoading(true);
@@ -135,13 +144,14 @@ export default function InvoicesPage() {
       String(i.id).includes(search) ||
       i.description?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || i.status === statusFilter;
-    return matchSearch && matchStatus;
+    const matchCustomerId = !customerIdParam || String(i.customer?.id) === customerIdParam;
+    return matchSearch && matchStatus && matchCustomerId;
   });
 
   const totalAmount = filtered.reduce((s: number, i: any) => s + (Number(i.amount) || 0), 0);
 
   return (
-    <AppShell>
+    <>
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Invoices</h1>
@@ -253,7 +263,15 @@ export default function InvoicesPage() {
                       )}
                     </div>
                     <div className="text-sm font-medium text-slate-400 flex items-center gap-2">
-                      {inv.customer?.name ?? "Guest User"}
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSearch(inv.customer?.name || "");
+                        }}
+                        className="hover:text-blue-400 transition-colors cursor-pointer font-bold"
+                      >
+                        {inv.customer?.name ?? "Guest User"}
+                      </button>
                       {inv.customer?.email && <span className="text-slate-600 text-xs">· {inv.customer.email}</span>}
                     </div>
                   </div>
@@ -380,6 +398,6 @@ export default function InvoicesPage() {
           </div>
         </form>
       </Modal>
-    </AppShell>
+    </>
   );
 }
