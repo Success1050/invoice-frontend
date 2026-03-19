@@ -42,6 +42,7 @@ export default function InvoicesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState<any>(null);
+  const [sortBy, setSortBy] = useState("newest");
   const [formData, setFormData] = useState({
     customerId: "",
     amount: "",
@@ -146,6 +147,9 @@ export default function InvoicesPage() {
     const matchStatus = statusFilter === "all" || i.status === statusFilter;
     const matchCustomerId = !customerIdParam || String(i.customer?.id) === customerIdParam;
     return matchSearch && matchStatus && matchCustomerId;
+  }).sort((a: any, b: any) => {
+    if (sortBy === "newest") return b.id - a.id;
+    return a.id - b.id;
   });
 
   const totalAmount = filtered.reduce((s: number, i: any) => s + (Number(i.amount) || 0), 0);
@@ -196,6 +200,18 @@ export default function InvoicesPage() {
                 )}
               </button>
             ))}
+            
+            <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block" />
+            
+            <button
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-slate-300"
+              onClick={() => setSortBy(sortBy === "newest" ? "oldest" : "newest")}
+            >
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+              </svg>
+              {sortBy === "newest" ? "NEWEST FIRST" : "OLDEST FIRST"}
+            </button>
           </div>
         </div>
 
@@ -247,15 +263,17 @@ export default function InvoicesPage() {
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   
                   <div 
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xs tracking-tighter shrink-0 relative z-10" 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center font-black shrink-0 relative z-10" 
                     style={{ background: `${color}15`, color }}
                   >
-                    #{inv.id}
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
                   </div>
 
                   <div className="flex-1 min-w-0 relative z-10">
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className="text-base font-bold text-white">Invoice #{inv.id}</span>
+                    <div className="flex items-center gap-3 mb-1 min-w-0">
+                      <span className="text-base font-bold text-white truncate min-w-0">Invoice #{inv.id}</span>
                       {inv.description && (
                         <span className="px-2 py-0.5 rounded-lg bg-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-widest border border-white/5">
                           {inv.description}

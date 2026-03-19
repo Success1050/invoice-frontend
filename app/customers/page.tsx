@@ -176,7 +176,7 @@ export default function CustomersPage() {
             {filtered.map((c, idx) => {
               const color = avatarColors[idx % avatarColors.length];
               return (
-                <button
+                <div
                   key={c.id}
                   id={`customer-${c.id}`}
                   className="group flex flex-col sm:flex-row sm:items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/[0.08] hover:border-white/10 transition-all cursor-pointer relative overflow-hidden text-left w-full"
@@ -236,7 +236,7 @@ export default function CustomersPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
                     </svg>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>

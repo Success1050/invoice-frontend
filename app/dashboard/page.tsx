@@ -121,11 +121,13 @@ function DashboardContent() {
                       className="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition-all text-left group"
                       onClick={() => router.push(`/invoices/${inv.id}`)}
                     >
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-[11px] group-hover:scale-105 transition-transform" style={{ background: `${color}15`, color }}>
-                        #{inv.id}
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0" style={{ background: `${color}15`, color }}>
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-white mb-1">Invoice #{inv.id}</div>
+                      <div className="flex-1 min-w-0 relative">
+                        <div className="text-sm font-bold text-white mb-1 truncate">Invoice #{inv.id}</div>
                         <div className="text-xs font-semibold text-slate-500 truncate">{inv.customer?.name ?? "Unknown"}</div>
                       </div>
                       <div className="text-right">
@@ -168,9 +170,9 @@ function DashboardContent() {
                 {recentCustomers.map((cust, idx) => {
                   const color = avatarColors[idx % avatarColors.length];
                   return (
-                    <button 
+                    <div 
                       key={cust.id} 
-                      className="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition-all text-left group"
+                      className="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition-all text-left group cursor-pointer"
                       onClick={() => router.push(`/customers/${cust.id}`)}
                     >
                       <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm tracking-tighter group-hover:scale-105 transition-transform" style={{ background: `${color}15`, color }}>
@@ -197,7 +199,7 @@ function DashboardContent() {
                           Customer
                         </div>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
