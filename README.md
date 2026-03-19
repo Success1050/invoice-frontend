@@ -5,17 +5,20 @@ A modern, responsive, and performance-oriented Invoice and Customer Management a
 ## ✨ Features
 
 - **Dashboard Overview**: Data-rich statistics, revenue collection metrics, and recent activity monitoring.
+- **Advanced Filtering & Sorting**: 
+  - Multi-point filtering: Filter invoices by customer directly from cards, dashboard, or directories.
+  - "Latest Addition" sorting with Newest/Oldest toggle for efficient record management.
 - **Invoice Management**: 
   - Comprehensive CRUD operations (Create, View, Update, Delete).
   - Status tracking with intuitive visual indicators (Paid, Pending, Overdue).
   - Advanced search by reference, ID, and client name.
-- **Customer Directory**: 
-  - Centralized management of customer profiles and interactions.
-  - Quick-view contact details and transactional history.
+- **Premium Detail Views**: 
+  - Deep-dive into records with redesigned Invoice and Customer detail pages using state-of-the-art glassmorphism aesthetics.
+  - Interactive hero sections, transactional history, and responsive layout optimizations.
 - **Modern Responsive Design**: 
   - Optimized for desktops, tablets, and small screens with a mobile-first approach.
-  - Built with Tailwind CSS for pixel-perfect aesthetics.
-- **Reliable Data Fetching**: Seamlessly integrated with the NestJS backend for real-time CRUD.
+  - Robust layout handling for long data strings (IDs/References) with truncation and smart icons.
+- **Reliable Data Fetching**: Seamlessly integrated with the NestJS backend for real-time CRUD via Fetch API.
 
 ## 🛠️ Technology Stack
 
