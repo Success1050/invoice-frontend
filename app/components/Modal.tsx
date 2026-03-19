@@ -30,61 +30,26 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
 
   return (
     <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 100,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-        background: "rgba(0, 0, 0, 0.6)",
-        backdropFilter: "blur(4px)",
-      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-5 bg-black/60 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
         ref={modalRef}
-        style={{
-          width: "100%",
-          maxWidth: 480,
-          background: "var(--bg-secondary)",
-          border: "1px solid var(--border)",
-          borderRadius: 20,
-          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.5)",
-          overflow: "hidden",
-          animation: "fadeInUp 0.3s ease",
-        }}
+        className="w-full max-w-[480px] bg-bg-secondary border border-border-subtle rounded-[20px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden animate-fade-in-up"
         onClick={(e) => e.stopPropagation()}
       >
-        <div
-          style={{
-            padding: "20px 24px",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)" }}>{title}</h2>
+        <div className="px-6 py-5 border-b border-border-subtle flex items-center justify-between">
+          <h2 className="text-lg font-bold text-text-primary">{title}</h2>
           <button
             onClick={onClose}
-            style={{
-              background: "none",
-              border: "none",
-              color: "var(--text-muted)",
-              cursor: "pointer",
-              fontSize: 24,
-              padding: 0,
-              lineHeight: 1,
-            }}
+            className="bg-transparent border-none text-text-muted cursor-pointer text-2xl leading-none p-0 hover:text-text-primary transition-colors"
           >
             ×
           </button>
         </div>
-        <div style={{ padding: 24 }}>{children}</div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );
