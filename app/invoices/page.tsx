@@ -5,6 +5,7 @@ import { getInvoices, getCustomers, createInvoice, updateInvoice, deleteInvoice 
 import { useRouter } from "next/navigation";
 import Modal from "../components/Modal";
 import SearchBar from "../components/SearchBar";
+import AppShell from "../components/AppShell";
 
 const avatarColors = [
   "#4f8ef7", "#7c6bf0", "#22d3ee", "#10b981", "#f59e0b", "#f43f5e",
@@ -12,20 +13,22 @@ const avatarColors = [
 
 const STATUS_FILTERS = ["all", "paid", "pending", "overdue", "draft"];
 
-function getBadgeClass(status: string) {
-  if (status === "paid") return "badge-paid";
-  if (status === "pending") return "badge-pending";
-  if (status === "overdue") return "badge-overdue";
-  return "badge-draft";
+function getBadgeStyles(status: string) {
+  switch(status) {
+    case "paid": return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+    case "pending": return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+    case "overdue": return "bg-rose-500/10 text-rose-400 border-rose-500/20";
+    default: return "bg-slate-500/10 text-slate-400 border-slate-500/20";
+  }
 }
 
 function SkeletonRows() {
   return (
-    <>
+    <div className="space-y-4">
       {[1, 2, 3, 4, 5].map((k) => (
-        <div key={k} className="skeleton skeleton-row" />
+        <div key={k} className="h-20 w-full bg-white/5 rounded-2xl animate-pulse" />
       ))}
-    </>
+    </div>
   );
 }
 
@@ -138,190 +141,157 @@ export default function InvoicesPage() {
   const totalAmount = filtered.reduce((s: number, i: any) => s + (Number(i.amount) || 0), 0);
 
   return (
-    <>
-      <div className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+    <AppShell>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="page-title">Invoices</h1>
-          <p className="page-subtitle">
-            {loading ? "Loading…" : `${invoices.length} invoice${invoices.length !== 1 ? "s" : ""} total`}
+          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Invoices</h1>
+          <p className="text-slate-400 font-medium">
+            {loading ? "Loading statistics…" : `${invoices.length} active invoices in the system`}
           </p>
         </div>
         <button 
-          className="btn btn-primary" 
-          style={{ marginBottom: 4 }}
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all"
           onClick={handleOpenCreate}
         >
-          <span>+</span> New Invoice
+          <span className="text-xl">+</span> Create Invoice
         </button>
       </div>
 
-      <div className="content-section">
-        {/* Toolbar */}
-        <div className="toolbar">
-          <SearchBar
-            placeholder="Search by customer, status or ID…"
-            value={search}
-            onChange={(val: string) => setSearch(val)}
-          />
+      <div className="space-y-6 min-w-0 w-full">
+        {/* Toolbar & Filters */}
+        <div className="flex flex-col gap-4 w-full min-w-0">
+          <div className="w-full min-w-0">
+            <SearchBar
+              placeholder="Search by customer, status or ID…"
+              value={search}
+              onChange={(val: string) => setSearch(val)}
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-2 w-full min-w-0">
+            {STATUS_FILTERS.map((s) => (
+              <button
+                key={s}
+                className={`px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap border ${
+                  statusFilter === s 
+                    ? "bg-blue-500/10 text-blue-400 border-blue-500/30 ring-1 ring-blue-500/20" 
+                    : "bg-white/5 text-slate-400 border-white/5 hover:bg-white/10 hover:text-slate-300"
+                }`}
+                onClick={() => setStatusFilter(s)}
+              >
+                {s.toUpperCase()}
+                {s !== "all" && (
+                  <span className="ml-1.5 py-0.5 px-1.5 rounded-lg bg-black/20 opacity-60">
+                    {invoices.filter((i) => i.status === s).length}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Status filters */}
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-          {STATUS_FILTERS.map((s) => (
-            <button
-              key={s}
-              className={`filter-chip${statusFilter === s ? " active" : ""}`}
-              onClick={() => setStatusFilter(s)}
-            >
-              {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
-              {s !== "all" && (
-                <span style={{ marginLeft: 6, opacity: 0.7 }}>
-                  ({invoices.filter((i) => i.status === s).length})
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Summary bar */}
+        {/* Summary horizontal bar */}
         {!loading && !error && filtered.length > 0 && (
-          <div
-            style={{
-              padding: "12px 18px",
-              background: "rgba(79,142,247,0.06)",
-              border: "1px solid rgba(79,142,247,0.14)",
-              borderRadius: 12,
-              marginBottom: 16,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: 8,
-            }}
-          >
-            <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-              Showing <strong style={{ color: "var(--text-primary)" }}>{filtered.length}</strong> invoice{filtered.length !== 1 ? "s" : ""}
-            </span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: "var(--accent-cyan)" }}>
-              Total: ₦{totalAmount.toLocaleString()}
-            </span>
+          <div className="bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/10 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-sm text-slate-400">
+               <span className="w-2 h-2 rounded-full bg-blue-500" />
+               Showing <strong className="text-white mx-0.5">{filtered.length}</strong> matching results
+            </div>
+            <div className="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
+               Page Total: ₦{totalAmount.toLocaleString()}
+            </div>
           </div>
         )}
 
-        {/* States */}
+        {/* Dynamic Content States */}
         {loading && <SkeletonRows />}
 
         {!loading && error && (
-          <div className="error-state">
-            <span className="error-state-icon">⚠️</span>
-            <p className="error-state-title">Failed to load invoices</p>
-            <p className="error-state-text">Make sure the backend server is running on the correct port.</p>
+          <div className="py-20 flex flex-col items-center text-center max-w-md mx-auto">
+            <div className="w-16 h-16 rounded-3xl bg-rose-500/10 flex items-center justify-center text-3xl mb-6">⚠️</div>
+            <h3 className="text-xl font-bold text-white mb-2">Data fetch failed</h3>
+            <p className="text-slate-400 leading-relaxed">Please check your network connection or ensure the API server is healthy.</p>
           </div>
         )}
 
         {!loading && !error && filtered.length === 0 && (
-          <div className="empty-state">
-            <span className="empty-state-icon">🔍</span>
-            <p className="empty-state-title">
-              {search || statusFilter !== "all" ? "No results found" : "No invoices yet"}
-            </p>
-            <p className="empty-state-text">
-              {search ? `No invoices matching "${search}".` : statusFilter !== "all" ? `No ${statusFilter} invoices.` : "Start adding invoices from your backend."}
+          <div className="py-32 flex flex-col items-center text-center max-w-md mx-auto">
+            <div className="w-20 h-20 rounded-[2rem] bg-white/5 flex items-center justify-center text-4xl mb-6 opacity-50">🔍</div>
+            <h3 className="text-xl font-bold text-white mb-2">No records found</h3>
+            <p className="text-slate-400 leading-relaxed">
+              {search ? `We couldn't find any invoices matching "${search}".` : "Your invoice database is currently empty."}
             </p>
           </div>
         )}
 
-        {/* Invoice list */}
+        {/* Invoice Grid/List */}
         {!loading && !error && filtered.length > 0 && (
-          <div className="data-list">
+          <div className="grid grid-cols-1 gap-4">
             {filtered.map((inv, idx) => {
               const color = avatarColors[idx % avatarColors.length];
-              const statusClass = getBadgeClass(inv.status);
               return (
-                <button
+                <div 
                   key={inv.id}
-                  id={`invoice-${inv.id}`}
-                  className="data-row"
+                  className="group flex flex-col sm:flex-row sm:items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/[0.08] hover:border-white/10 transition-all cursor-pointer relative overflow-hidden"
                   onClick={() => router.push(`/invoices/${inv.id}`)}
                 >
-                  <div
-                    className="avatar"
-                    style={{ background: `${color}1a`, color, fontSize: 13, fontWeight: 700 }}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  <div 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xs tracking-tighter shrink-0 relative z-10" 
+                    style={{ background: `${color}15`, color }}
                   >
                     #{inv.id}
                   </div>
-                  <div className="row-main">
-                    <div className="row-title">
-                      Invoice #{inv.id}
+
+                  <div className="flex-1 min-w-0 relative z-10">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="text-base font-bold text-white">Invoice #{inv.id}</span>
                       {inv.description && (
-                        <span className="tag" style={{ marginLeft: 8 }}>
-                          {inv.description.slice(0, 20)}{inv.description.length > 20 ? "…" : ""}
+                        <span className="px-2 py-0.5 rounded-lg bg-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-widest border border-white/5">
+                          {inv.description}
                         </span>
                       )}
                     </div>
-                    <div className="row-subtitle">
-                      {inv.customer?.name ?? "Unknown Customer"}
-                      {inv.customer?.email && ` • ${inv.customer.email}`}
+                    <div className="text-sm font-medium text-slate-400 flex items-center gap-2">
+                      {inv.customer?.name ?? "Guest User"}
+                      {inv.customer?.email && <span className="text-slate-600 text-xs">· {inv.customer.email}</span>}
                     </div>
                   </div>
-                  <div className="row-meta">
-                    <span className="invoice-amount">
-                      ₦{Number(inv.amount).toLocaleString()}
-                    </span>
-                    <span className={`badge ${statusClass}`}>{inv.status ?? "draft"}</span>
+
+                  <div className="flex items-center gap-6 justify-between sm:justify-end relative z-10">
+                    <div className="text-right">
+                      <div className="text-lg font-black text-white mb-1">₦{Number(inv.amount).toLocaleString()}</div>
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black border uppercase tracking-wider ${getBadgeStyles(inv.status)}`}>
+                        {inv.status}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={(e) => handleOpenEdit(e, inv)}
+                        className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all"
+                      >
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button 
+                        onClick={(e) => handleDelete(e, inv.id)}
+                        className="p-2.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 transition-all"
+                      >
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                    
+                    <div className="hidden sm:block text-slate-600 group-hover:text-blue-400 transition-colors translate-x-1 group-hover:translate-x-2">
+                      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+                      </svg>
+                    </div>
                   </div>
-                  <div style={{ display: "flex", gap: 8, marginLeft: 16 }}>
-                    <button 
-                      onClick={(e) => handleOpenEdit(e, inv)}
-                      style={{
-                        padding: "6px 10px",
-                        background: "rgba(79, 142, 247, 0.1)",
-                        color: "var(--accent-blue)",
-                        border: "none",
-                        borderRadius: 6,
-                        fontSize: 11,
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        transition: "all 0.2s"
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(79, 142, 247, 0.2)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(79, 142, 247, 0.1)")}
-                    >
-                      EDIT
-                    </button>
-                    <button 
-                      onClick={(e) => handleDelete(e, inv.id)}
-                      style={{
-                        padding: "6px 10px",
-                        background: "rgba(244, 63, 94, 0.1)",
-                        color: "#fb7185",
-                        border: "none",
-                        borderRadius: 6,
-                        fontSize: 11,
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        transition: "all 0.2s"
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(244, 63, 94, 0.2)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(244, 63, 94, 0.1)")}
-                    >
-                      DELETE
-                    </button>
-                  </div>
-                  <div style={{ marginLeft: 16 }}>
-                    <svg
-                      style={{ color: "var(--text-muted)", flexShrink: 0 }}
-                      width="16"
-                      height="16"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
-                    </svg>
-                  </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -331,95 +301,85 @@ export default function InvoicesPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingInvoice ? "Edit Invoice" : "Create New Invoice"}
+        title={editingInvoice ? "Edit Invoice Detail" : "Generate New Invoice"}
       >
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <label style={{ fontSize: 13, color: "var(--text-secondary)" }}>Customer</label>
-            <select
-              style={{
-                width: "100%",
-                padding: "10px 14px",
-                background: "var(--bg-card)",
-                border: "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--text-primary)",
-                fontSize: 14,
-                outline: "none"
-              }}
-              required
-              value={formData.customerId}
-              onChange={(e) => setFormData({ ...formData, customerId: e.target.value })}
-            >
-              <option value="">Select a customer</option>
-              {customers.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+        <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Customer Client</label>
+            <div className="relative group">
+              <select
+                className="w-full h-12 bg-slate-900 border border-white/10 rounded-xl px-4 text-white text-sm focus:border-blue-500 outline-none transition-all appearance-none"
+                required
+                value={formData.customerId}
+                onChange={(e) => setFormData({ ...formData, customerId: e.target.value })}
+              >
+                <option value="">Select a registered customer</option>
+                {customers.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">▼</div>
+            </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <label style={{ fontSize: 13, color: "var(--text-secondary)" }}>Amount (₦)</label>
+
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Amount (₦)</label>
             <input
               type="number"
-              className="search-input"
-              style={{ paddingLeft: 14 }}
+              className="w-full h-12 bg-slate-900 border border-white/10 rounded-xl px-4 text-white text-sm focus:border-blue-500 outline-none transition-all"
               required
               value={formData.amount}
               onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
               placeholder="0.00"
             />
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <label style={{ fontSize: 13, color: "var(--text-secondary)" }}>Status</label>
-            <select
-              style={{
-                width: "100%",
-                padding: "10px 14px",
-                background: "var(--bg-card)",
-                border: "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--text-primary)",
-                fontSize: 14,
-              }}
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-            >
-              {STATUS_FILTERS.filter(s => s !== "all").map(s => (
-                <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-              ))}
-            </select>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Status</label>
+              <div className="relative group">
+                <select
+                  className="w-full h-12 bg-slate-900 border border-white/10 rounded-xl px-4 text-white text-sm focus:border-blue-500 outline-none transition-all appearance-none"
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                >
+                  {STATUS_FILTERS.filter(s => s !== "all").map(s => (
+                    <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">▼</div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Reference</label>
+              <input
+                type="text"
+                className="w-full h-12 bg-slate-900 border border-white/10 rounded-xl px-4 text-white text-sm focus:border-blue-500 outline-none transition-all"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="e.g. INV-2024"
+              />
+            </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <label style={{ fontSize: 13, color: "var(--text-secondary)" }}>Description</label>
-            <input
-              type="text"
-              className="search-input"
-              style={{ paddingLeft: 14 }}
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="e.g. Services rendered"
-            />
-          </div>
-          <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+
+          <div className="flex gap-4 pt-4">
             <button
               type="button"
-              className="btn btn-outline"
-              style={{ flex: 1 }}
+              className="flex-1 h-12 bg-white/5 border border-white/10 rounded-xl text-slate-300 font-bold hover:bg-white/10 transition-all"
               onClick={() => setIsModalOpen(false)}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
-              style={{ flex: 1 }}
+              className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all disabled:opacity-50"
               disabled={submitting}
             >
-              {submitting ? "Saving..." : editingInvoice ? "Save Changes" : "Create Invoice"}
+              {submitting ? "Processing…" : editingInvoice ? "Update Invoice" : "Confirm Invoice"}
             </button>
           </div>
         </form>
       </Modal>
-    </>
+    </AppShell>
   );
 }
