@@ -1,64 +1,68 @@
-# InvoiceFlow - Web Frontend
+# InvoiceFlow - Web Frontend 🖇️
 
-A modern, responsive Invoice and Customer Management application built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
+A modern, responsive, and performance-oriented Invoice and Customer Management application built with **Next.js**, **TypeScript**, and **Tailwind CSS**. A key component of the InvoiceFlow ecosystem.
 
-## 🚀 Objective
-Develop a web application that allows users to view, search, and manage a list of invoices and customers through a robust integration with a NestJS backend API.
+## ✨ Features
 
-## 🛠 Technology Stack
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) / Vanilla Global CSS
-- **API Integration:** RESTful Fetch API
+- **Dashboard Overview**: Data-rich statistics, revenue collection metrics, and recent activity monitoring.
+- **Invoice Management**: 
+  - Comprehensive CRUD operations (Create, View, Update, Delete).
+  - Status tracking with intuitive visual indicators (Paid, Pending, Overdue).
+  - Advanced search by reference, ID, and client name.
+- **Customer Directory**: 
+  - Centralized management of customer profiles and interactions.
+  - Quick-view contact details and transactional history.
+- **Modern Responsive Design**: 
+  - Optimized for desktops, tablets, and small screens with a mobile-first approach.
+  - Built with Tailwind CSS for pixel-perfect aesthetics.
+- **Reliable Data Fetching**: Seamlessly integrated with the NestJS backend for real-time CRUD.
 
-## ✨ Key Features
-- **Dashboard Overview:** Real-time business statistics and quick access to recent activities.
-- **Invoice Management:** Full CRUD (Create, Read, Update, Delete) with status tracking (Paid, Pending, Overdue).
-- **Customer Database:** Centralized management of customer profiles and contact information.
-- **Advanced Search & Filtering:** Instant filtering of lists by name, ID, status, or description.
-- **Responsive Detail Views:** Deep-dive into specific records with mobile-optimized layouts.
-- **Error Handling:** Graceful API failure handling with user-friendly error messages and loading skeletons.
+## 🛠️ Technology Stack
 
-## 📥 Prerequisites
-Before you begin, ensure you have the following installed:
-- [Node.js 18.x](https://nodejs.org/) or higher
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- **Framework**: [Next.js](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Integration**: RESTful Fetch API
 
-## ⚙️ Setup & Installation
+## 🚀 Getting Started
 
-Follow these steps to get the project running locally:
+### Prerequisites
+- Node.js (v18 or higher)
+- npm (v9 or higher)
+- A running instance of the [InvoiceFlow Backend](https://github.com/Success1050/invoice-backend).
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Success1050/invoice-frontend.git
-cd invoice-frontend
-```
+### Installation
 
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Environment Configuration
-The application requires a connection to the [InvoiceFlow Backend](https://github.com/Success1050/invoice-backend).
-
-1. Copy the example environment file:
+1. **Clone the repository**:
    ```bash
-   cp .env.example .env
+   git clone https://github.com/Success1050/invoice-frontend.git
+   cd invoice-app-web
    ```
-2. Open `.env` and ensure the `NEXT_PUBLIC_API_URL` matches your running backend URL (default is `http://localhost:3000`).
 
-### 4. Run the Development Server
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+### Running the Project
+
 ```bash
+# Development mode
 npm run dev
 ```
 
-The application will be available at [http://localhost:3001](http://localhost:3001) (or your configured port).
+The application will be available at [http://localhost:3001](http://localhost:3001).
 
-## 🔗 Repository Links
-- **Backend (NestJS):** [Repository Link](https://github.com/Success1050/invoice-backend)
-- **Frontend (Web):** [Repository Link](https://github.com/Success1050/invoice-frontend)
-- **Mobile (Flutter):** [Repository Link](https://github.com/Success1050/invoice-mobile)
+## ⚙️ Environment Configuration
+
+Ensure your `.env` file points to the running backend service:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+## 🔗 Related Repositories
+- **Backend (NestJS)**: [invoice-backend](https://github.com/Success1050/invoice-backend)
+- **Mobile App (Flutter)**: [invoice-mobile](https://github.com/Success1050/invoice-mobile)
 
 ---
-*Created by Emmanuel Success for the Applicant Exercise.*
+*Developed by Emmanuel Success as part of the Full-Stack Developer Assessment.*
