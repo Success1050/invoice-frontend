@@ -1,8 +1,8 @@
-# InvoiceFlow - Web Frontend 🖇️
+# InvoiceFlow - Web Frontend 
 
 A modern, responsive, and performance-oriented Invoice and Customer Management application built with **Next.js**, **TypeScript**, and **Tailwind CSS**. A key component of the InvoiceFlow ecosystem.
 
-## ✨ Features
+## Features
 
 - **Dashboard Overview**: Data-rich statistics, revenue collection metrics, and recent activity monitoring.
 - **Advanced Filtering & Sorting**: 
@@ -20,14 +20,14 @@ A modern, responsive, and performance-oriented Invoice and Customer Management a
   - Robust layout handling for long data strings (IDs/References) with truncation and smart icons.
 - **Reliable Data Fetching**: Seamlessly integrated with the NestJS backend for real-time CRUD via Fetch API.
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Framework**: [Next.js](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Integration**: RESTful Fetch API
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
@@ -56,14 +56,14 @@ npm run dev
 
 The application will be available at [http://localhost:3001](http://localhost:3001).
 
-## ⚙️ Environment Configuration
+## Environment Configuration
 
 Ensure your `.env` file points to the running backend service:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-## 🔗 Related Repositories
+## Related Repositories
 - **Backend (NestJS)**: [invoice-backend](https://github.com/Success1050/invoice-backend)
 - **Mobile App (Flutter)**: [invoice-mobile](https://github.com/Success1050/invoice-mobile)
 
