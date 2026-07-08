@@ -39,7 +39,7 @@ export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="relative min-h-screen overflow-hidden w-full" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1a3a 50%, #0a0f1e 100%)" }}>
+    <div className="relative min-h-screen overflow-hidden w-full" style={{ background: "linear-gradient(135deg, #1a0f2e 0%, #2d1b69 50%, #1a0f2e 100%)" }}>
       {/* Background glows */}
       <div className="landing-glow-1" />
       <div className="landing-glow-2" />
