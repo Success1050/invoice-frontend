@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #0a0f1e;
-  --color-bg-secondary: #0d1526;
-  --color-bg-card: rgba(255, 255, 255, 0.04);
-  --color-bg-card-hover: rgba(255, 255, 255, 0.08);
+  --color-bg-primary: #0a1f0f;
+  --color-bg-secondary: #0d2615;
+  --color-bg-card: rgba(34, 197, 94, 0.04);
+  --color-bg-card-hover: rgba(34, 197, 94, 0.08);
   --color-border-subtle: rgba(255, 255, 255, 0.08);
   --color-border-subtle-hover: rgba(255, 255, 255, 0.16);
   --color-accent-blue: #4f8ef7;
